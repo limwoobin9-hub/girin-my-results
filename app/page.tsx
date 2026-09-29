@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { ArrowRight, BookOpen, LoaderCircle, ShieldCheck } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
 type Item = { id: number; key: string; title: string; kind: "hw" | "exam"; score: number; dueAt: string | null; submittedAt: string | null };
 type Cutoff = { grade: number; minimum: number | null; students: number };
@@ -91,30 +91,19 @@ export default function Home() {
 
   if (checking) return <main className="screen-center"><LoaderCircle className="spin" size={28} aria-label="로그인 확인 중" /></main>;
 
-  if (!session) return <main className="login-page">
-    <div className="orb orb-one" /><div className="orb orb-two" />
-    <div className="login-layout">
-      <section className="intro">
-        <div className="brand"><span className="brand-mark">기</span><span>기린국어 <b>성적</b></span></div>
-        <div className="eyebrow"><span className="eyebrow-line" /> YOUR LEARNING, CLEARLY</div>
-        <h1>내 성적을<br /><em>한눈에.</em></h1>
-        <p>최근 숙제와 시험의 점수, 평균, 등수와 등급컷을 확인하세요.</p>
-        <div className="intro-foot"><span className="tiny-star">✳</span> 본인 계정으로 로그인하면 본인 성적만 표시됩니다.</div>
-      </section>
-      <section className="login-card" aria-label="로그인">
-        <div className="login-icon"><BookOpen size={24} strokeWidth={1.7} /></div>
-        <div className="login-label">WELCOME BACK</div>
-        <h2>로그인</h2>
-        <p className="muted">기린국어 계정으로 시작하세요.</p>
-        <form onSubmit={signIn}>
+  if (!session) return <main className="dashboard">
+    <header className="site-header"><div className="container"><h1>나의 성적</h1></div></header>
+    <div className="container main-content">
+      <section className="search-panel submit-login" aria-labelledby="girin-login-heading">
+        <h2 id="girin-login-heading">기린국어 로그인</h2>
+        <form onSubmit={signIn} className="submit-login-form">
           <label htmlFor="student-name">이름</label>
-          <input id="student-name" autoComplete="username" placeholder="이름을 입력하세요" value={name} onChange={(event) => setName(event.target.value)} required maxLength={80} />
+          <input id="student-name" autoComplete="username" value={name} onChange={(event) => setName(event.target.value)} required maxLength={80} />
           <label htmlFor="student-password">비밀번호</label>
-          <input id="student-password" type="password" autoComplete="current-password" placeholder="비밀번호를 입력하세요" value={password} onChange={(event) => setPassword(event.target.value)} required maxLength={200} />
-          {loginError && <div className="form-error" role="alert">{loginError}</div>}
-          <button className="primary-button" type="submit" disabled={loginBusy}>{loginBusy ? <LoaderCircle className="spin" size={18} /> : <>성적 확인하기 <ArrowRight size={19} /></>}</button>
+          <input id="student-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required maxLength={200} />
+          <button className="solid-button" type="submit" disabled={loginBusy}>{loginBusy ? "로그인 중…" : "로그인"}</button>
         </form>
-        <div className="login-note"><ShieldCheck size={16} /> 비밀번호는 기린국어 로그인 확인에만 사용됩니다.</div>
+        {loginError && <p className="error-message" role="alert">{loginError}</p>}
       </section>
     </div>
   </main>;

@@ -14,6 +14,16 @@ async function getJson<T>(url: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+async function getMetrics() {
+  try {
+    return await getJson<{ metrics: Record<string, Metric> }>("/api/results/metrics");
+  } catch {
+    // A cold cohort request can fail while one upstream request is temporarily unavailable.
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    return getJson<{ metrics: Record<string, Metric> }>("/api/results/metrics");
+  }
+}
+
 function shortDate(date: string | null) {
   return date?.slice(0, 10).replaceAll("-", ". ") || "날짜 없음";
 }
@@ -36,9 +46,10 @@ export default function Home() {
     setMetricsBusy(true);
     setMetricsError("");
     try {
-      const result = await getJson<{ metrics: Record<string, Metric> }>("/api/results/metrics");
+      const result = await getMetrics();
       setMetrics(result.metrics);
     } catch (error) {
+      setMetrics({});
       setMetricsError(error instanceof Error ? error.message : "집계를 완료하지 못했습니다.");
     } finally { setMetricsBusy(false); }
   }, []);
@@ -46,11 +57,12 @@ export default function Home() {
   const loadResults = useCallback(async () => {
     setItemsBusy(true);
     setItemsError("");
-    setMetrics({});
     try {
       const result = await getJson<{ items: Item[] }>("/api/results");
+      // Present a complete card on first login instead of rendering dashes while metrics load.
+      if (result.items.length) await loadMetrics();
+      else { setMetrics({}); setMetricsError(""); }
       setItems(result.items);
-      if (result.items.length) void loadMetrics();
     } catch (error) {
       setItemsError(error instanceof Error ? error.message : "성적을 불러오지 못했습니다.");
     } finally { setItemsBusy(false); }

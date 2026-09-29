@@ -25,7 +25,6 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px 
 .submit-login-form input:focus { border-color: #6289e8; box-shadow: 0 0 0 3px #6289e844; }
 .submit-login-form .remember-option { display: flex; align-items: center; gap: 8px; margin: 2px 0; cursor: pointer; font-size: .9rem; }
 .submit-login-form .remember-option input { width: 17px; height: 17px; min-height: 0; margin: 0; padding: 0; flex: none; accent-color: #274e93; }
-.remember-option span { color: #65758a; font-weight: 400; }
 .solid-button { justify-self: start; margin-top: 8px; padding: 8px 16px; min-height: 36px; border: 0; border-radius: 7px; background: #274e93; color: #fff; font-weight: 700; }
 .solid-button:hover { background: #1f4787; }
 

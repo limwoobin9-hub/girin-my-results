@@ -116,7 +116,7 @@ export default function Home() {
           <input id="student-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required maxLength={200} />
           <label className="remember-option" htmlFor="remember-login">
             <input id="remember-login" type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} />
-            로그인 유지 <span>(30일)</span>
+            로그인 유지
           </label>
           <button className="solid-button" type="submit" disabled={loginBusy}>{loginBusy ? "로그인 중…" : "로그인"}</button>
         </form>

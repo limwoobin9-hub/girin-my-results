@@ -23,6 +23,9 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px 
 .submit-login-form label { font-weight: 700; color: #334e72; }
 .submit-login-form input { width: 100%; min-height: 36px; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #182335; padding: 6px 10px; outline: none; }
 .submit-login-form input:focus { border-color: #6289e8; box-shadow: 0 0 0 3px #6289e844; }
+.submit-login-form .remember-option { display: flex; align-items: center; gap: 8px; margin: 2px 0; cursor: pointer; font-size: .9rem; }
+.submit-login-form .remember-option input { width: 17px; height: 17px; min-height: 0; margin: 0; accent-color: #274e93; }
+.remember-option span { color: #65758a; font-weight: 400; }
 .solid-button { justify-self: start; margin-top: 8px; padding: 8px 16px; min-height: 36px; border: 0; border-radius: 7px; background: #274e93; color: #fff; font-weight: 700; }
 .solid-button:hover { background: #1f4787; }
 
@@ -53,7 +56,6 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px 
 .cutoff-row + .cutoff-row { border-top: 1px solid #edf0f4; }
 .cutoff-row strong { color: #1d457d; }
 .cutoff-row small { color: #748399; min-width: 2.5em; text-align: right; }
-.cutoffs p { margin: 12px 0 0; color: #65758a; font-size: .85rem; }
 .empty-card { color: #69798e; background: #fff; border: 1px dashed #ccd5e1; border-radius: 13px; padding: 24px; line-height: 1.6; }
 .error-message { color: #aa2c39; margin: 12px 0; }
 .error-message button { border: 0; background: none; color: inherit; text-decoration: underline; font-weight: 700; }

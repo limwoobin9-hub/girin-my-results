@@ -33,6 +33,7 @@ export default function Home() {
   const [checking, setChecking] = useState(true);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
   const [loginBusy, setLoginBusy] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [items, setItems] = useState<Item[]>([]);
@@ -83,7 +84,7 @@ export default function Home() {
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST", credentials: "same-origin", cache: "no-store",
-        headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, password }),
+        headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, password, remember }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "로그인하지 못했습니다.");
@@ -113,6 +114,10 @@ export default function Home() {
           <input id="student-name" autoComplete="username" value={name} onChange={(event) => setName(event.target.value)} required maxLength={80} />
           <label htmlFor="student-password">비밀번호</label>
           <input id="student-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required maxLength={200} />
+          <label className="remember-option" htmlFor="remember-login">
+            <input id="remember-login" type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} />
+            로그인 유지 <span>(30일)</span>
+          </label>
           <button className="solid-button" type="submit" disabled={loginBusy}>{loginBusy ? "로그인 중…" : "로그인"}</button>
         </form>
         {loginError && <p className="error-message" role="alert">{loginError}</p>}
@@ -146,7 +151,7 @@ export default function Home() {
           {metric && <details className="cutoffs"><summary>등급컷 보기</summary><div className="cutoff-grid">
             <div><h3>9등급 기준</h3><div className="cutoff-list">{metric.cutoffs9.map((band) => <div className="cutoff-row" key={band.grade}><span>{band.grade}등급</span><strong>{band.minimum === null ? "—" : `${band.minimum}점`}</strong><small>{band.students}명</small></div>)}</div></div>
             <div><h3>5등급 기준</h3><div className="cutoff-list">{metric.cutoffs5.map((band) => <div className="cutoff-row" key={band.grade}><span>{band.grade}등급</span><strong>{band.minimum === null ? "—" : `${band.minimum}점`}</strong><small>{band.students}명</small></div>)}</div></div>
-          </div><p>확인 가능한 참여자 {metric.count}명 기준 추정치</p></details>}
+          </div></details>}
         </article>;
       })}</div>
     </div>

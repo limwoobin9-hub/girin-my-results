@@ -4,6 +4,7 @@ export const GIRIN_ORIGIN = "https://hw.girinkorean.com";
 export const PRIVATE_HEADERS = { "Cache-Control": "private, no-store", "Vary": "Cookie", "X-Content-Type-Options": "nosniff" };
 const COOKIE = "girin_student_session";
 const HOURS = 8;
+const REMEMBER_DAYS = 30;
 
 export type StudentSession = { id: number; name: string; expires: number; upstreamCookie?: string };
 
@@ -29,9 +30,10 @@ async function key() {
   return crypto.subtle.importKey("raw", await secretBytes(), "AES-GCM", false, ["encrypt", "decrypt"]);
 }
 
-export async function issueSession(id: number, name: string, upstreamCookie?: string) {
+export async function issueSession(id: number, name: string, upstreamCookie?: string, remember = false) {
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const payload: StudentSession = { id, name, expires: Date.now() + HOURS * 3600_000, upstreamCookie };
+  const duration = remember ? REMEMBER_DAYS * 24 * 3600_000 : HOURS * 3600_000;
+  const payload: StudentSession = { id, name, expires: Date.now() + duration, upstreamCookie };
   const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await key(), new TextEncoder().encode(JSON.stringify(payload)));
   return `${toBase64(iv)}.${toBase64(new Uint8Array(ciphertext))}`;
 }
@@ -53,8 +55,11 @@ export async function readSession(request: NextRequest): Promise<StudentSession 
   } catch { return null; }
 }
 
-export function setSession(response: NextResponse, token: string) {
-  response.cookies.set(COOKIE, token, { httpOnly: true, secure: true, sameSite: "strict", path: "/", maxAge: HOURS * 3600 });
+export function setSession(response: NextResponse, token: string, remember = false) {
+  response.cookies.set(COOKIE, token, {
+    httpOnly: true, secure: true, sameSite: "strict", path: "/",
+    ...(remember ? { maxAge: REMEMBER_DAYS * 24 * 3600 } : {}),
+  });
   return response;
 }
 
